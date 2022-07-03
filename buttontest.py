@@ -1,13 +1,13 @@
 import dash
 import dash_html_components as html
-import subprocess
+from PDF_creation import getpdf
 
 app = dash.Dash(__name__)
 
 app.layout = html.Div(children=[
                        html.Div([            
-                       html.Button('Apply', id='apply-button', n_clicks=0),
-                       html.Div(id='output-container-button', children='Hit the button to update.')
+                       html.Button('pdf', id='pdf-button', n_clicks=0),
+                       html.Div(id='output-container-button', children='Hit the button to create a pdf')
                       ])
                 ])                      
                 
@@ -25,8 +25,8 @@ def run_script_onClick(n_clicks):
     #result = subprocess.check_output( ['/usr/bin/python', 'script.py'] )  
 
     # with `shell` it needs string 'python script.py'
-    result = subprocess.check_output('python script.py', shell=True)  
-
+    #  subprocess.check_output('python script.py', shell=True)  
+    result = getpdf
     # convert bytes to string
     result = result.decode()  
     
