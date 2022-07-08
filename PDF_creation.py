@@ -22,7 +22,7 @@ pdf.add_page()
 
 #add format
 #logo
-pdf.image("sifi-icon.jpg", 70, 0, 20)
+pdf.image("sifi-icon.jpg", 0, 0, 20)
 #font arial bold 15pts
 pdf.set_font('Arial', 'B', 15)
 #move to the right
