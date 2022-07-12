@@ -4,6 +4,7 @@ from turtle import color
 from fpdf import FPDF
 import mysql.connector
 from mysql.connector import Error
+from sqlalchemy import true
 
 
    #save FPDF class into a variable pdf
@@ -12,6 +13,7 @@ pdf = FPDF('P', 'mm', (300, 150))
 #Add page
 pdf.add_page()
 
+#set new margins equation
 epw = pdf.w - pdf.l_margin - pdf.r_margin
 eph = pdf.h - pdf.t_margin - pdf.b_margin
 
@@ -84,27 +86,26 @@ if row[4] is not None:
 
 #add format
 #logo
-    pdf.image("sifi-icon.jpg", 0, 0, 20)
+    pdf.image("cwsp_c.png", 0, 0, 20)
     pdf.set_font("Arial", size= 16)
     # pdf.ln(10)
     pdf.cell(110)
     pdf.cell(200, 10,  txt= "RECOMENDACIONES", ln= 12, align= 'L')
     pdf.set_font("Arial", size= 13)
     pdf.cell(-110)
-    pdf.cell(200, 10, txt= "Se ha capturado el handshake. Lo que significa que se ha podido hacer una deautenticacion del cliente conectado al Access Point", ln= 13, align= 'L')
-    pdf.cell(200, 10,  txt= "Se recomienda actualizar a una solución de autenticación 802.1X/EAP usando autenticación tunelada.", ln= 14, align= 'L')
+    pdf.cell(200, 10, txt= "Se ha capturado el 4 way handshake. Lo que significa que se ha podido hacer una deautenticacion del cliente conectado al Access Point", ln= 13, align= 'L')
+    pdf.cell(200, 10,  txt= "Segun el libro CWSP en su capitulo 9.1.8 se recomienda actualizar a una solución de autenticación 802.1X/EAP usando autenticación ", ln= 14, align= 'L')
+    pdf.cell(200, 1,  txt= "tunelada.", ln= 15, align= 'L')
 
+    pdf.set_font("Arial", size= 16)
+    pdf.cell(110)
+    pdf.cell(200, 10,  txt= "Mejores practicas a tomar", ln= 18, align= 'L')
+    pdf.set_font("Arial", size= 13)
+    pdf.cell(-110)
+    pdf.cell(200, 10,  txt= "- Política corporativa: Un apéndice adicional a las recomendaciones de seguridad podrían ser las recomendaciones de políticas WLAN ", ln= 19, align= 'L')
+    pdf.cell(200, 1,  txt= "corporativas. El auditor puede ayudar al cliente a redactar una política de seguridad de la red inalámbrica si aún no tiene una.", ln= 15, align= 'L')
 else:
     pdf.cell(200, 10, txt= "No se ha capturado el handshake", ln= 11, align= 'L')
-#PDF function
-#class pdfcreator():
-
-    # def getpdf(bssid, essid, devIP, ok):
-    #     essid = essid
-    #     bssid = bssid
-    #     devIP = devIP
-
-# def getpdf():
 
 #save the pdf with the .pdf extension
 # Go to 1.5 cm from bottom
