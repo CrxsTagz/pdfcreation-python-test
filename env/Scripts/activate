@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\mynam\Downloads\PRUEBAS\env"
+VIRTUAL_ENV="C:\Users\mynam\OneDrive\Documents\GitHub\pdfcreation-python-test\env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

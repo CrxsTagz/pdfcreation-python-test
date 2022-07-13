@@ -1,36 +1,35 @@
-from random import random
-import string
-from turtle import color
 from fpdf import FPDF
 import mysql.connector
 from mysql.connector import Error
-from sqlalchemy import true
+from datetime import datetime
 
-
-   #save FPDF class into a variable pdf
+# save FPDF class into a variable pdf
 pdf = FPDF('P', 'mm', (300, 150))
+date = datetime. now(). strftime("%Y_%m_%d-%I-%M-%S_%p")
 
-#Add page
+# Add page
 pdf.add_page()
 
-#set new margins equation
+# set new margins equation
 epw = pdf.w - pdf.l_margin - pdf.r_margin
 eph = pdf.h - pdf.t_margin - pdf.b_margin
 
 # Draw new margins.
 pdf.rect(pdf.l_margin, pdf.t_margin, w=epw, h=eph)   
 
-#add format
-#logo
+# add format
+# logo
 pdf.image("sifi-icon.jpg", 0, 0, 20)
-#font arial bold 15pts
+# font arial bold 15pts
 pdf.set_font('Arial', 'B', 15)
-#move to the right
+# move to the right
 pdf.cell(125)
 # Title
 pdf.cell(30, 10, 'SIFI WSS', 1, 0, 'C')
 # Line break
 pdf.ln(20)
+
+Assesment_ID = 0
 
 try:
         connection = mysql.connector.connect(host='localhost',
@@ -44,7 +43,7 @@ try:
     # get all records
         records = cursor.fetchall()
         print("Total number of rows in table: ", cursor.rowcount)
-
+        Assesment_ID = '{:0>5}'.format(int(records[0][0]))
         print("\nPrinting each row")
         for row in records:
             print("Id = ", row[0], )
@@ -89,30 +88,81 @@ if row[4] is not None:
     pdf.image("cwsp_c.png", 0, 0, 20)
     pdf.set_font("Arial", size= 16)
     # pdf.ln(10)
-    pdf.cell(110)
-    pdf.cell(200, 10,  txt= "RECOMENDACIONES", ln= 12, align= 'L')
-    pdf.set_font("Arial", size= 13)
-    pdf.cell(-110)
-    pdf.cell(200, 10, txt= "Se ha capturado el 4 way handshake. Lo que significa que se ha podido hacer una deautenticacion del cliente conectado al Access Point", ln= 13, align= 'L')
-    pdf.cell(200, 10,  txt= "Segun el libro CWSP en su capitulo 9.1.8 se recomienda actualizar a una solución de autenticación 802.1X/EAP usando autenticación ", ln= 14, align= 'L')
-    pdf.cell(200, 1,  txt= "tunelada.", ln= 15, align= 'L')
+    
+#ESTADO DE LA RED, SIFI WSS SCORE
+#Estable	Al menos 1 resultado negativo de cualquiera de las funciones principales
+if row[4] is not None:
+    if row[5] is not None:
+        pdf.set_font("Arial", size= 16)
+        pdf.cell(125)
+        pdf.cell(200, 10,  txt= "Sifi Score: ", ln= 24, align= 'L')
+        pdf.set_font("Arial", size= 13)
+        pdf.cell(-125)
+        pdf.cell(200, 10,  txt= "Segun el assesment de la red, la puntuacion asignada es: ", ln= 25, align= 'L')
+        pdf.cell(200, 10,  txt= "Sifi Score: Vulnerable. La red pudo ser vulnerada en al menos dos ambitos. ", ln= 26, align= 'L')
 
-    pdf.set_font("Arial", size= 16)
-    pdf.cell(110)
-    pdf.cell(200, 10,  txt= "Mejores practicas a tomar", ln= 18, align= 'L')
-    pdf.set_font("Arial", size= 13)
-    pdf.cell(-110)
-    pdf.cell(200, 10,  txt= "- Política corporativa: Un apéndice adicional a las recomendaciones de seguridad podrían ser las recomendaciones de políticas WLAN ", ln= 19, align= 'L')
-    pdf.cell(200, 1,  txt= "corporativas. El auditor puede ayudar al cliente a redactar una política de seguridad de la red inalámbrica si aún no tiene una.", ln= 15, align= 'L')
+        pdf.set_font("Arial", size= 16)
+        pdf.cell(110)
+        pdf.cell(200, 10,  txt= "RECOMENDACIONES", ln= 24, align= 'L')
+        pdf.set_font("Arial", size= 13)
+        pdf.cell(-110)
+        pdf.cell(200, 10, txt= "A parte de haber capturado el 4-full way handshake, se pudo hacer un crack de la contraseña", ln= 13, align= 'L')
+        pdf.cell(200, 10,  txt= "Segun el libro CWSP en su capitulo 9.1.8 se recomienda actualizar a una solución de autenticación 802.1X/EAP usando autenticación ", ln= 14, align= 'L')
+        pdf.cell(200, 1,  txt= "tunelada.", ln= 15, align= 'L')
+        
+        pdf.set_font("Arial", size= 16)
+        pdf.cell(110)
+        pdf.cell(200, 10,  txt= "Mejores practicas a tomar", ln= 24, align= 'L')
+        pdf.set_font("Arial", size= 13)
+        pdf.cell(-110)
+        pdf.cell(200, 10,  txt= "- Política corporativa: Un apéndice adicional a las recomendaciones de seguridad podrían ser las recomendaciones de políticas WLAN ", ln= 19, align= 'L')
+        pdf.cell(200, 1,  txt= "corporativas. El auditor puede ayudar al cliente a redactar una política de seguridad de la red inalámbrica si aún no tiene una.", ln= 20, align= 'L')
+        pdf.ln(2)
+        pdf.cell(200, 10,  txt= "- Seguridad física: La instalación de unidades de cerramiento para proteger contra el robo y el acceso físico no autorizado a los puntos", ln= 21, align= 'L')
+        pdf.cell(200, 1,  txt= "de acceso puede ser una recomendación. Estas también se utilizan a menudo con fines estéticos. ", ln= 22, align= 'L')
+
+        
+    #Vulnerable	2 pentesting con resultados negativos de cualquier función de la plataforma.
+
+    else:
+        pdf.set_font("Arial", size= 16)
+        pdf.cell(125)
+        pdf.cell(200, 10,  txt= "Sifi Score: ", ln= 24, align= 'L')
+        pdf.set_font("Arial", size= 13)
+        pdf.cell(-125)
+        pdf.cell(200, 10,  txt= "Segun el assesment de la red, la puntuacion asignada es: ", ln= 25, align= 'L')
+        pdf.cell(200, 10,  txt= "Sifi Score: Estable. La red pudo ser vulnerada en al menos un ambito.", ln= 26, align= 'L')
+
+        pdf.set_font("Arial", size= 16)
+        pdf.cell(110)
+        pdf.cell(200, 10,  txt= "RECOMENDACIONES", ln= 24, align= 'L')
+        pdf.set_font("Arial", size= 13)
+        pdf.cell(-110)
+        pdf.cell(200, 10, txt= "Se ha capturado el 4 way handshake. Lo que significa que se ha podido hacer una deautenticacion del cliente conectado al Access Point", ln= 13, align= 'L')
+        pdf.cell(200, 10,  txt= "Segun el libro CWSP en su capitulo 9.1.8 se recomienda actualizar a una solución de autenticación 802.1X/EAP usando autenticación ", ln= 14, align= 'L')
+        pdf.cell(200, 1,  txt= "tunelada.", ln= 15, align= 'L')
+
+        pdf.set_font("Arial", size= 16)
+        pdf.cell(110)
+        pdf.cell(200, 10,  txt= "Mejores practicas a tomar", ln= 24, align= 'L')
+        pdf.set_font("Arial", size= 13)
+        pdf.cell(-110)
+        pdf.cell(200, 10,  txt= "- Política corporativa: Un apéndice adicional a las recomendaciones de seguridad podrían ser las recomendaciones de políticas WLAN ", ln= 19, align= 'L')
+        pdf.cell(200, 1,  txt= "corporativas. El auditor puede ayudar al cliente a redactar una política de seguridad de la red inalámbrica si aún no tiene una.", ln= 20, align= 'L')
+        pdf.ln(2)
+        pdf.cell(200, 10,  txt= "- Seguridad física: La instalación de unidades de cerramiento para proteger contra el robo y el acceso físico no autorizado a los puntos", ln= 21, align= 'L')
+        pdf.cell(200, 1,  txt= "de acceso puede ser una recomendación. Estas también se utilizan a menudo con fines estéticos. ", ln= 22, align= 'L')
+
 else:
-    pdf.cell(200, 10, txt= "No se ha capturado el handshake", ln= 11, align= 'L')
+    pdf.set_font("Arial", size= 16)
+    pdf.cell(125)
+    pdf.cell(200, 10,  txt= "Sifi Score: ", ln= 24, align= 'L')
+    pdf.set_font("Arial", size= 13)
+    pdf.cell(-125)
+    pdf.cell(200, 10,  txt= "Segun el assesment de la red, la puntuacion asignada es: ", ln= 25, align= 'L')
+    pdf.cell(200, 10,  txt= "Sifi Score: Seguro. Todos los pentest poseen resultados positivos y con ninguna vulnerabilidad detectada.", ln= 26, align= 'L')
+
+    # pdf.cell(200, 10, txt= "No se ha capturado el handshake", ln= 11, align= 'L')
 
 #save the pdf with the .pdf extension
-# Go to 1.5 cm from bottom
-pdf.set_x(5)
-pdf.set_y(0)
-# Select Arial italic 8
-pdf.set_font('Arial', 'I', 8)
-# Print centered page number
-pdf.cell(0, 10, 'Page %s' % pdf.page_no(), 0, 0, 'C')
-pdf.output("Assesment.pdf")
+pdf.output("SiFi_{}_{}.pdf".format(Assesment_ID, date))
