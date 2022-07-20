@@ -136,6 +136,12 @@ def pdfGenerator(customerName):
         # Draw new margins.
         pdf.rect(pdf.l_margin, pdf.t_margin, w=epw, h=eph)
         
+        pdf.set_font("Arial", size= 16)
+        pdf.cell(100)
+        pdf.cell(200, 10,  txt= "Directrices de contraseñas PCI-DSS", ln= 21, align= 'L')
+        pdf.set_font("Arial", size= 13)
+        pdf.cell(-100)
+        
         #SETTING SPECIAL CHARACTERS TO PRESENT THE PCI-DSS handle
         chars = set('!#$%&()*+,-./:;<=>?@[\]^_`{|}~')
         if any((c in chars) for c in row[5]):
@@ -144,37 +150,19 @@ def pdfGenerator(customerName):
             pass
             
         else:
-            pdf.set_font("Arial", size= 16)
-            pdf.cell(100)
-            pdf.cell(200, 10,  txt= "Directrices de contraseñas PCI-DSS", ln= 21, align= 'L')
-            pdf.set_font("Arial", size= 13)
-            pdf.cell(-100)
+            
             pdf.cell(200, 10, txt = "Su contraseña no tiene caracteres especiales por lo tanto presentamos tecnicas de se deben tener en cuenta: ", ln=23, align='L')
             # pdf.cell(200,1, txt= "deben tener en cuenta" , ln= 25, align= 'L')
-            pdf.cell(200, 10,  txt= "Segun la guia de PCI-DSS en la seccion 4.4 se plantean las siguientes recomendaciones para mas seguridad:", ln= 22, align= 'L')
-            pdf.ln(5)
-            pdf.cell(200, 10, txt = "- Se debe cambiar siempre los valores predeterminados que fueron proporcionados por el proveedor, esto incluye las contraseñas y las ", ln=23, align='L')
-            pdf.cell(200, 1, txt= "configuraciones como tambien deshabilitar las cuentas innecesarias antes de instalar su propio sistema de red.  ", ln= 24, align='L')
-            pdf.ln(2)
-            pdf.cell(200, 10, txt= "- Eliminar o deshabilitar cuentas de usuarios inactivas dentro de 90 dias", ln= 25, align='L')
-            pdf.cell(200, 10, txt= "- Limitar los intentos de acceso repetidos bloqueando el ID de usuario despues de mas de 5 intentos y establecer una duracion de", ln= 26, align='L')
-            pdf.cell(200, 1, txt= "bloqueo en un minimo de 30 minutos o hasta que el administrador habilite el ID del usuario.", ln=27, align='L')
-            pdf.ln(2)
-            pdf.cell(200, 10, txt= "- Se debe cambiar la contraseña de los usuarios una vez cada 90 dias y no permitir que se repita las ultimas cuatro contraseñas.", ln= 28, align='L')
-            pdf.ln(2)
-            pdf.cell(200, 10, txt= "- Establecer contraseñas para el primer uso y al restablecerlas a un valor unico para cada usuario y cambiar inmediatamente despues", ln= 29, align='L')
-            pdf.cell(200, 1, txt= " del primer uso. Hacer cumplir la autenticacion multifactor ", ln= 30, align='L')
             
         if len(row[5]) > 13:
            pdf.cell(200,10, txt= "La contraseña posee la longitud recomendada")
             
         else:
-            pdf.set_font("Arial", size= 16)
-            pdf.cell(100)
-            pdf.cell(200, 10,  txt= "Directrices de contraseñas PCI-DSS", ln= 21, align= 'L')
-            pdf.set_font("Arial", size= 13)
-            pdf.cell(-100)
             pdf.cell(200, 10, txt = "Su contraseña no posee la longitud recomendada, por lo tanto presentamos tecnicas de se deben tener en cuenta", ln=23, align='L')
+        
+        if any((c in chars) for c in row[5]) and len(row[5]) > 13:
+            pdf.cell(200, 100, txt= " La contraseña tiene la longitud recomendada e incluye caracteres especiales")
+        else:
             pdf.cell(200, 10,  txt= "Segun la guia de PCI-DSS en la seccion 4.4 se plantean las siguientes recomendaciones para mas seguridad:", ln= 22, align= 'L')
             pdf.ln(5)
             pdf.cell(200, 10, txt = "- Se debe cambiar siempre los valores predeterminados que fueron proporcionados por el proveedor, esto incluye las contraseñas y las ", ln=23, align='L')
@@ -188,10 +176,7 @@ def pdfGenerator(customerName):
             pdf.ln(2)
             pdf.cell(200, 10, txt= "- Establecer contraseñas para el primer uso y al restablecerlas a un valor unico para cada usuario y cambiar inmediatamente despues", ln= 29, align='L')
             pdf.cell(200, 1, txt= " del primer uso. Hacer cumplir la autenticacion multifactor ", ln= 30, align='L')
-        
-        if any((c in chars) for c in row[5]) and len(row[5]) > 13:
-            pdf.cell(200, 100, txt= " La contraseña tiene la longitud recomendada e incluye caracteres especiales")
-
+            
         #Vulnerable	2 pentesting con resultados negativos de cualquier función de la plataforma.
 
     elif row[4] != "" and row[5] is None:
