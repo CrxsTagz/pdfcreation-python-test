@@ -1,5 +1,7 @@
 from gettext import lngettext
 from msilib.schema import Font
+from re import A
+from tarfile import LNKTYPE
 from tkinter import font
 import fpdf
 from fpdf import FPDF
@@ -489,8 +491,9 @@ def pdfGenerator(customerName):
          pdf.cell(-115)
          pdf.ln(10)
          if row[5] == "PSK":
-            pdf.set_font("Arial", size= 13)
+            pdf.set_font("Arial",'B', size= 14)
             pdf.cell(200, 10, txt="Best practices para PSK:", ln= 10, align='L')
+            pdf.set_font("Arial", size= 13)
             pdf.cell(200, 5, txt="- Se debera cambiar el PSK por defecto a una nueva", ln = 11, align='L')
             pdf.cell(200, 10, txt="- Generar un PSK nuevo/diferente para cada tunel VPN", ln = 11, align='L')
             pdf.cell(200, 10, txt="- Usar un generador de contraseñas aleatorias", ln = 11, align='L')
@@ -498,11 +501,35 @@ def pdfGenerator(customerName):
             pdf.cell(200, 10, txt="- Usar una combinacion de caracteres especiales y letras mayusculas en la generacion del PSK", ln = 11, align='L')
             pdf.cell(200, 10, txt="- No guardar el PSK en ningun otro lugar", ln = 11, align='L')
          if row[3] == "WPA2":
-            pdf.cell(200,10, txt= "Hola")
-        
-        
-         print ("Hola")
+            pdf.set_font("Arial", 'B', size= 14)
+            pdf.cell(200,10, txt= "Best practices para WPA2:", ln = 10, align= 'L')
+            pdf.set_font("Arial", size= 13)
+            pdf.cell(200,10, txt= "- Si se tiene WPA2 personal se debe actualizar a una version mas reciente o a la solución de autenticación 802.1X/EAP mediante autenticación tunelada. ", ln=10, align= 'L')
+            pdf.cell(200, 10, txt= "- Proporcionar un cliente de anti-virus que este en constante ejecucion y actualizado con los ultimos patches", ln= 12, align='L'   )
+            pdf.cell(200, 10, txt= "- Tener un firewall en la red que este operacional en todo momento ", ln= 12, align='L' )
+            pdf.add_page()
+            # set new margins equation
+            epw = pdf.w - pdf.l_margin - pdf.r_margin
+            eph = pdf.h - pdf.t_margin - pdf.b_margin
 
+     # Draw new margins.
+            pdf.rect(pdf.l_margin, pdf.t_margin, w=epw, h=eph)
+            
+            pdf.cell(200, 10, txt= "- Tener una autenticacion doble factor", ln= 12, align='L'   )
+            pdf.cell(200, 10, txt= "- La red debe ser configurada por el personal correspondiente ", ln= 12, align='L'   )
+         
+     elif row[3] == "WPA2" and row[4] == "CCMP TKIP" and row[5] == "PSK":
+        pdf.cell(200,10, txt= "HOLA", ln= 12, align='L')
+        # if row[5] == "PSK":
+        #     pdf.set_font("Arial",'B', size= 14)
+        #     pdf.cell(200, 10, txt="Best practices para PSK:", ln= 10, align='L')
+        #     pdf.set_font("Arial", size= 13)
+        #     pdf.cell(200, 5, txt="- Se debera cambiar el PSK por defecto a una nueva", ln = 11, align='L')
+        #     pdf.cell(200, 10, txt="- Generar un PSK nuevo/diferente para cada tunel VPN", ln = 11, align='L')
+        #     pdf.cell(200, 10, txt="- Usar un generador de contraseñas aleatorias", ln = 11, align='L')
+        #     pdf.cell(200, 10, txt="- Generar un PSK de 20 o mas caracteres para evitar ataques de fuerza bruta", ln = 11, align='L')
+        #     pdf.cell(200, 10, txt="- Usar una combinacion de caracteres especiales y letras mayusculas en la generacion del PSK", ln = 11, align='L')
+        #     pdf.cell(200, 10, txt="- No guardar el PSK en ningun otro lugar", ln = 11, align='L')
      
      #save the pdf with the .pdf extension
      pdf.output("SiFi_{}_{}.pdf".format(Assesment_ID, date))
