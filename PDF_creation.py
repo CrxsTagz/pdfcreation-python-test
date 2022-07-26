@@ -530,7 +530,8 @@ def pdfGenerator(customerName):
         #     pdf.cell(200, 10, txt="- Generar un PSK de 20 o mas caracteres para evitar ataques de fuerza bruta", ln = 11, align='L')
         #     pdf.cell(200, 10, txt="- Usar una combinacion de caracteres especiales y letras mayusculas en la generacion del PSK", ln = 11, align='L')
         #     pdf.cell(200, 10, txt="- No guardar el PSK en ningun otro lugar", ln = 11, align='L')
-     
+     elif row[3] == "WPA2 WPA" and row[4] == "CCMP" and row[5] == "PSK":
+        pdf.cell(200,10, txt= "HOLA", ln= 12, align='L')
      #save the pdf with the .pdf extension
      pdf.output("SiFi_{}_{}.pdf".format(Assesment_ID, date))
 
