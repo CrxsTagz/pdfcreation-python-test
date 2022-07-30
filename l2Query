@@ -1,0 +1,65 @@
+import mysql.connector
+from mysql.connector import Error
+from fpdf import FPDF
+from datetime import datetime
+
+#wssID = 80
+
+def l2pdfGenerator(wssID):
+    try:
+        connection = mysql.connector.connect(host='100.64.0.1',
+                                         database='sifi',
+                                         user='root',
+                                         password='sifi')
+        cursor = connection.cursor()
+        sql_select_Query = "SELECT * FROM l2isolation where wssid = {};".format(str(wssID))
+        cursor.execute(sql_select_Query)
+        # get all records
+        records = cursor.fetchall()
+        print("Total number of rows in table: ", cursor.rowcount)
+        pdf = FPDF('P', 'mm', (300, 150))
+        date = datetime.now().strftime("%Y_%m_%d-%I-%M-%S_%p")
+        # Add page
+        pdf.add_page()
+        pdf.set_font("Arial", 'B', size= 16)
+        # Loop through query payload (2D array)
+        epw = pdf.w - 8*pdf.l_margin
+        col_width = epw/4
+        pdf.set_font('Times','B', 30) 
+        pdf.cell(epw, 0.0, 'L2 Isolation', align='L')
+        pdf.set_font('Times','',10.0) 
+        pdf.ln(20)
+        for row in records:
+            payload = ''
+            # Loop through each row's tuple
+            for i in row:
+                # Concat into single string
+                payload = payload + str(i) + ' '
+            # Add string to PDF
+           
+            th = pdf.font_size
+ 
+            for payload in row:
+                # Enter data in colums
+                # Notice the use of the function str to coerce any input to the 
+                # string type. This is needed
+                # since pyFPDF expects a string, not a number.
+                pdf.cell(col_width, 4*th, str(payload), border=1)
+
+            pdf.ln(4*th)
+                # pdf.cell(200,10, txt=payload, align= 'L')
+                # Print new line into PDF
+                # pdf.ln(10)
+            # print(payload)
+        # Save PDF file
+        pdfFilePath = "L2_{}.pdf".format(date)
+        pdf.output(pdfFilePath)
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            print("MySQL connection is closed")
+            
+#l2pdfGenerator(wssID)
